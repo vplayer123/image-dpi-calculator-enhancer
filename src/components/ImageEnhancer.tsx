@@ -26,6 +26,7 @@ export const ImageEnhancer = () => {
   const [isProcessing, setIsProcessing] = useState(false);
   
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const newImageInputRef = useRef<HTMLInputElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   const calculateDPI = (width: number, height: number, fileSizeBytes: number): number => {
@@ -346,13 +347,21 @@ export const ImageEnhancer = () => {
                 </div>
 
                 <Button
-                  onClick={() => fileInputRef.current?.click()}
+                  onClick={() => newImageInputRef.current?.click()}
                   variant="secondary"
                   className="w-full"
                 >
                   <Upload className="mr-2 h-4 w-4" />
                   Upload New Image
                 </Button>
+                
+                <input
+                  ref={newImageInputRef}
+                  type="file"
+                  accept="image/*"
+                  onChange={(e) => e.target.files?.[0] && handleFileSelect(e.target.files[0])}
+                  className="hidden"
+                />
               </div>
             </Card>
           </div>
