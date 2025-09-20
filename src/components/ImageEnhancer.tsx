@@ -21,6 +21,7 @@ export const ImageEnhancer = () => {
   const [brightness, setBrightness] = useState([100]);
   const [contrast, setContrast] = useState([100]);
   const [quality, setQuality] = useState([85]);
+  const [targetDpi, setTargetDpi] = useState([300]);
   const [isDragging, setIsDragging] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
   
@@ -54,19 +55,27 @@ export const ImageEnhancer = () => {
     img.onload = () => {
       setOriginalStats(getImageStats(img, fileSize));
       
+      // Calculate new dimensions for target DPI
+      const originalDpi = calculateDPI(img.naturalWidth, img.naturalHeight, fileSize);
+      const scaleFactor = targetDpi[0] / originalDpi;
+      const newWidth = Math.round(img.naturalWidth * scaleFactor);
+      const newHeight = Math.round(img.naturalHeight * scaleFactor);
+      
       // Apply enhancements
       const canvas = canvasRef.current;
       if (!canvas) return;
       
-      canvas.width = img.naturalWidth;
-      canvas.height = img.naturalHeight;
+      canvas.width = newWidth;
+      canvas.height = newHeight;
       
       const ctx = canvas.getContext('2d');
       if (!ctx) return;
       
-      // Apply filters
+      // Apply filters and scale image
       ctx.filter = `brightness(${brightness[0]}%) contrast(${contrast[0]}%)`;
-      ctx.drawImage(img, 0, 0);
+      ctx.imageSmoothingEnabled = true;
+      ctx.imageSmoothingQuality = 'high';
+      ctx.drawImage(img, 0, 0, newWidth, newHeight);
       
       // Convert to JPEG with specified quality
       const enhancedDataUrl = canvas.toDataURL('image/jpeg', quality[0] / 100);
@@ -75,9 +84,9 @@ export const ImageEnhancer = () => {
       // Calculate enhanced image stats
       const enhancedSize = Math.round((enhancedDataUrl.length - 'data:image/jpeg;base64,'.length) * 0.75);
       setEnhancedStats({
-        width: img.naturalWidth,
-        height: img.naturalHeight,
-        dpi: calculateDPI(img.naturalWidth, img.naturalHeight, enhancedSize),
+        width: newWidth,
+        height: newHeight,
+        dpi: targetDpi[0],
         fileSize: enhancedSize,
         format: 'JPEG'
       });
@@ -86,7 +95,7 @@ export const ImageEnhancer = () => {
       toast.success("Image enhanced successfully!");
     };
     img.src = imageUrl;
-  }, [brightness, contrast, quality]);
+  }, [brightness, contrast, quality, targetDpi]);
 
   const handleFileSelect = (file: File) => {
     if (!file.type.startsWith('image/')) {
@@ -314,6 +323,26 @@ export const ImageEnhancer = () => {
                     step={5}
                     className="w-full"
                   />
+                </div>
+
+                <div>
+                  <label className="text-sm font-medium mb-2 block">
+                    Target DPI: {targetDpi[0]} (for print quality)
+                  </label>
+                  <Slider
+                    value={targetDpi}
+                    onValueChange={(value) => {
+                      setTargetDpi(value);
+                      handleEnhancementChange();
+                    }}
+                    max={600}
+                    min={72}
+                    step={25}
+                    className="w-full"
+                  />
+                  <div className="text-xs text-muted-foreground mt-1">
+                    72 DPI: Web • 150 DPI: Good • 300 DPI: Print • 600 DPI: High-end
+                  </div>
                 </div>
 
                 <Button
