@@ -1,5 +1,5 @@
 import { useState, useRef, useCallback } from "react";
-import { Upload, Download, Image as ImageIcon, Zap } from "lucide-react";
+import { Upload, Download, Image as ImageIcon, Zap, Share2, Facebook, Twitter, Linkedin } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Slider } from "@/components/ui/slider";
@@ -366,6 +366,104 @@ export const ImageEnhancer = () => {
             </Card>
           </div>
         )}
+
+        {/* SEO Content Section */}
+        <section className="mt-16 max-w-4xl mx-auto">
+          <Card className="p-8">
+            <h2 className="text-3xl font-bold text-foreground mb-6">Professional Image Enhancement Tool</h2>
+            <div className="prose prose-lg max-w-none text-muted-foreground">
+              <p className="mb-4">
+                Transform your images with our advanced image enhancer tool that combines professional-grade compression, 
+                DPI optimization, and quality enhancement features. Perfect for photographers, designers, and content creators 
+                who need high-quality image processing for web and print applications.
+              </p>
+              
+              <h3 className="text-xl font-semibold text-foreground mt-6 mb-3">Key Benefits:</h3>
+              <ul className="list-disc pl-6 space-y-2">
+                <li><strong>Smart DPI Adjustment:</strong> Optimize images for web (72 DPI) or print quality (300-600 DPI) with intelligent scaling algorithms</li>
+                <li><strong>Advanced Compression:</strong> Reduce file sizes while maintaining visual quality using optimized JPEG compression</li>
+                <li><strong>Real-time Enhancement:</strong> Adjust brightness, contrast, and quality with instant preview capabilities</li>
+                <li><strong>Professional Output:</strong> Download high-quality enhanced images ready for any application</li>
+                <li><strong>Easy-to-Use Interface:</strong> Drag-and-drop functionality with intuitive controls for seamless workflow</li>
+                <li><strong>Free Tool:</strong> Access professional image enhancement features without watermarks or limitations</li>
+              </ul>
+              
+              <p className="mt-6">
+                Whether you're preparing images for social media, e-commerce, print materials, or web publishing, 
+                our image enhancer delivers the quality and control you need. Support for various DPI settings ensures 
+                your images look perfect across all mediums and devices.
+              </p>
+            </div>
+          </Card>
+        </section>
+
+        {/* Social Media Sharing Section */}
+        <section className="mt-12 text-center">
+          <Card className="p-6 bg-surface/50">
+            <div className="flex items-center justify-center gap-2 mb-4">
+              <Share2 className="h-5 w-5 text-primary" />
+              <h3 className="text-lg font-semibold text-foreground">Share This Tool</h3>
+            </div>
+            <p className="text-muted-foreground mb-6">Help others discover this free image enhancement tool</p>
+            
+            <div className="flex justify-center gap-4 flex-wrap">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => {
+                  const url = window.location.href;
+                  const text = "Check out this amazing free image enhancer tool with DPI calculator and compression features!";
+                  window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`, '_blank', 'width=600,height=400');
+                }}
+                className="gap-2"
+              >
+                <Facebook className="h-4 w-4" />
+                Facebook
+              </Button>
+              
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => {
+                  const url = window.location.href;
+                  const text = "Check out this amazing free image enhancer tool with DPI calculator and compression features!";
+                  window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(url)}`, '_blank', 'width=600,height=400');
+                }}
+                className="gap-2"
+              >
+                <Twitter className="h-4 w-4" />
+                Twitter
+              </Button>
+              
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => {
+                  const url = window.location.href;
+                  const text = "Check out this amazing free image enhancer tool with DPI calculator and compression features!";
+                  window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(url)}`, '_blank', 'width=600,height=400');
+                }}
+                className="gap-2"
+              >
+                <Linkedin className="h-4 w-4" />
+                LinkedIn
+              </Button>
+              
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => {
+                  navigator.clipboard.writeText(window.location.href);
+                  toast.success("Link copied to clipboard!");
+                }}
+                className="gap-2"
+              >
+                <Share2 className="h-4 w-4" />
+                Copy Link
+              </Button>
+            </div>
+          </Card>
+        </section>
 
         <canvas ref={canvasRef} className="hidden" />
       </div>
